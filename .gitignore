@@ -9,3 +9,7 @@
 
 # Undo-tree save-files
 *.~undo-tree
+/sync-recentf/
+/template.el
+/dired-filetype-face.el
+desktop.ini
