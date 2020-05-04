@@ -4,8 +4,12 @@
 # Packaging
 .cask
 
-# Backup files
+# Emacs backup files
 *~
+\#*\#
+# Emacs backups of hidden files, like ".gitignore.~3~"
+.*.~*~
+.\#*
 
 # Undo-tree save-files
 *.~undo-tree
