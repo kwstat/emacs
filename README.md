@@ -1,2 +1,2 @@
-# dot-emacs
-Personal configurations for emacs
+# emacs
+Personal configuration files for emacs
