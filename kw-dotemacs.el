@@ -107,7 +107,7 @@
   ;;(set-face-attribute 'fixed-pitch nil :family "Dina")
   (set-face-attribute 'fixed-pitch nil :family "Lucida Console" :height 90)
   ;;(setq default-frame-alist '((width . 90) (height . 32) (font . "Consolas-10")))
-  (setq default-frame-alist '((width . 90) (height . 32)))
+  (setq default-frame-alist '((width . 100) (height . 32)))
   ;; (font . "Dina-9"))) ; Only 6,9 seem to work on Windows
   ;; (font . "Liberation Mono-12") ; Linux
   
@@ -453,9 +453,10 @@ otherwise just move in the buffer."
              (sbuffer (process-buffer sprocess))
              (buf-coding (symbol-name buffer-file-coding-system))
              (R-cmd
-              (format ".outfile=rmarkdown::render(\"%s\"); shell.exec(.outfile)"
+              (format ".outfile=rmarkdown::render(\"%s\" , clean=TRUE); shell.exec(.outfile)"
                       buffer-file-name)))
         (message "Running rmarkdown on %s" buffer-file-name)
+        (message "With string %s" R-cmd)
         (ess-execute R-cmd 'buffer nil nil)
         (switch-to-buffer rmd-buf) ; switch back to Rmd buffer
         ) )
@@ -911,7 +912,6 @@ otherwise just move in the buffer."
 
 ;; allow multiple emacs sessions to use recentf
 (use-package sync-recentf
-  :disabled
   :custom
   (recentf-auto-cleanup 60))
 
@@ -1030,17 +1030,18 @@ otherwise just move in the buffer."
 
 ;; ---------------------------------------------------------------------------
 
-(use-package theme-changer
+(use-package theme-looper
   :demand ; override delayed loading caused by :bind
   :custom
-  (custom-theme-directory (concat dropbox-dir "emacs/themes/"))
-  (theme-changer-theme-list '(zen leuven spring summer autumn winter
-                              base16-mocha twilight-bright monokai))
+  (custom-theme-directory (concat dropbox-dir "emacs/themes/"))  
   :bind
-  ("<f5>" . theme-changer-load-theme)
-  ("<S-f5>" . theme-changer-reload-theme)
-  ("<C-f5>" . theme-changer-enable-next-theme)
+  ("<f5>" . theme-looper-select-theme)
+  ("<S-f5>" . (lambda () (interactive)
+                (theme-looper-enable-theme (theme-looper--get-current-theme))))
+  ("<C-f5>" . theme-looper-enable-next-theme)
   :config
+  (theme-looper-set-favorite-themes
+   '(zen leuven spring summer autumn winter base16-mocha twilight-bright monokai faff))
   (load-theme 'zen t) )
 
 ;; ---------------------------------------------------------------------------
