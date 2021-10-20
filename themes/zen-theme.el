@@ -76,10 +76,10 @@
       (tan-1    "#947249")
       (tan-0    "#573700") ; saddlebrown = #8b4513
       (class '((class color) (min-colors 89)))
-      (ol1 '(:foreground "#f0c0d0" :background "#500000" :height 1.3 :weight bold :overline "#f0c0d0"))
-      (ol2 '(:foreground "#cee7ff" :background "#000060" :weight bold))
-      (ol3 '(:foreground "#dbf7c0" :background "#004000" :weight bold))
-      (ol4 '(:foreground "#fff0c0" :background "#573700" :weight bold))
+      (header1 '(:foreground "#dbf7c0" :background "#006000" :height 1.4 :weight bold)) ;; :overline "#006000"
+      (header2 '(:foreground "#cee7ff" :background "#0000f0" :height 1.3 :weight bold))
+      (header3 '(:foreground "#f0c0d0" :background "#901000" :height 1.2 :weight bold))
+      (header4 '(:foreground "#fff0c0" :background "#573700" :height 1.1 :weight bold))
       (paren-matched '(:background "black" :weight bold))
       (paren-unmatched '(:foreground "white" :background "#901010" :weight bold))
       )
@@ -117,6 +117,12 @@
    `(secondary-selection ((t (:background ,gray-4))))
    `(vertical-border ((t (:foreground ,gray-8))))
 
+   ;; apropos
+   `(apropos-symbol ((,class (:height 1.3 :weight bold :foreground ,tan-4))))
+   `(apropos-function-button ((,class (:foreground ,blue-4))))
+   `(apropos-variable-button ((,class (:foreground ,blue-4))))
+   `(apropos-misc-button ((,class (:foreground ,green-4))))
+   
    ;; comint
    `(comint-highlight-prompt ((t (:foreground ,blue-4 :weight bold :background ,gray-2))))
 
@@ -215,11 +221,11 @@
 
    ;; markdown
    `(markdown-header-delimiter-face ((t (:foreground ,gray-8 :weight bold))))
-   ;;`(markdown-metadata-value-face  ((,class (:family "Sans Serif" :height 1.2 :weight bold :foreground "black"))))
-   `(markdown-header-face-1 ((,class ,ol1)))
-   `(markdown-header-face-2 ((,class ,ol2)))
-   `(markdown-header-face-3 ((,class ,ol3)))
-   `(markdown-header-face-4 ((,class ,ol4)))
+   ;;`(markdown-metadata-value-face  ((,class (:weight bold :foreground "black"))))
+   `(markdown-header-face-1 ((,class ,header1)))
+   `(markdown-header-face-2 ((,class ,header2)))
+   `(markdown-header-face-3 ((,class ,header3)))
+   `(markdown-header-face-4 ((,class ,header4)))
  
    ;; org
    `(org-agenda-date-today
@@ -237,10 +243,10 @@
    `(org-formula ((t (:foreground ,yellow-3))))
    `(org-headline-done ((t (:foreground ,green-5))))
    `(org-hide ((t (:foreground ,gray-1))))
-   `(org-level-1 ((,class ,ol1)))
-   `(org-level-2 ((,class ,ol2)))
-   `(org-level-3 ((,class ,ol3)))
-   `(org-level-4 ((,class ,ol4)))
+   `(org-level-1 ((,class ,header1)))
+   `(org-level-2 ((,class ,header2)))
+   `(org-level-3 ((,class ,header3)))
+   `(org-level-4 ((,class ,header4)))
    `(org-level-5 ((t (:foreground ,cyan-2))))
    `(org-level-6 ((t (:foreground ,green-3))))
    `(org-level-7 ((t (:foreground ,red-2))))

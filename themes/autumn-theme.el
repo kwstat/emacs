@@ -64,10 +64,10 @@
       (tan-1    "#947249")
       (tan-0    "#573700") ; saddlebrown = #8b4513
       (class '((class color) (min-colors 89)))
-      (ol1 '(:foreground "#f0c0d0" :background "#500000" :height 1.3 :weight bold :overline "#f0c0d0"))
-      (ol2 '(:foreground "#cee7ff" :background "#000060" :weight bold))
-      (ol3 '(:foreground "#dbf7c0" :background "#004000" :weight bold))
-      (ol4 '(:foreground "#fff0c0" :background "#573700" :weight bold))
+      (header1 '(:foreground "#f0c0d0" :background "#500000" :height 1.4 :weight bold)) ;; :overline "#f0c0d0"
+      (header2 '(:foreground "#cee7ff" :background "#000060" :height 1.3 :weight bold))
+      (header3 '(:foreground "#dbf7c0" :background "#004000" :height 1.2 :weight bold))
+      (header4 '(:foreground "#fff0c0" :background "#573700" :height 1.1 :weight bold))
       )
 
   (custom-theme-set-faces
@@ -162,24 +162,12 @@
 
    ;; markdown
    `(markdown-header-delimiter-face ((t (:foreground ,gray-8 :weight bold))))
-   `(markdown-metadata-value-face  ((,class (:family "Sans Serif" :height 1.2 :weight bold :foreground "black"))))
-   `(markdown-header-face-1 ((,class ,ol1)))
-   `(markdown-header-face-2 ((,class ,ol2)))
-   `(markdown-header-face-3 ((,class ,ol3)))
-   `(markdown-header-face-4 ((,class ,ol4)))
+   `(markdown-metadata-value-face  ((,class (:weight bold :foreground "black"))))
+   `(markdown-header-face-1 ((,class ,header1)))
+   `(markdown-header-face-2 ((,class ,header2)))
+   `(markdown-header-face-3 ((,class ,header3)))
+   `(markdown-header-face-4 ((,class ,header4)))
  
-   ;; org
-   `(org-date ((t (:foreground ,purple-4))))
-   `(org-document-title ((t (:height 1.6 :weight bold))))
-   `(org-done ((t (:foreground ,green-4))))
-   `(org-hide ((t (:foreground ,blue-0))))
-   `(org-link ((t (:foreground ,blue-5))))
-   `(org-todo ((t (:foreground ,red-3))))
-   `(org-level-1 ((,class ,ol1)))
-   `(org-level-2 ((,class ,ol2)))
-   `(org-level-3 ((,class ,ol3)))
-   `(org-level-4 ((,class ,ol4)))
-
    ;; paren
    `(show-paren-match ((t (:foreground ,blue-0 :background ,blue-3))))
    `(show-paren-mismatch ((t (:foreground ,red-0 :background ,red-4))))

@@ -6,6 +6,25 @@
 
 ;; ---------------------------------------------------------------------------
 
+;; https://stackoverflow.com/questions/25408349/multikeys-shortcuts-in-emacs
+
+;; Capital letters are also allowed
+(defun kw-bookmark (choice)
+  "Choices for directories and files."
+  (interactive "c[a]ccounts | [d]ownloads | [t]odo.md | [g]oals")
+    (cond
+     ((eq choice ?a)
+      (find-file "c:/one/misc/accounts.md"))
+     ((eq choice ?d)
+      (dired "c:/Users/Wrightkevi/Downloads"))
+     ((eq choice ?t)
+      (find-file "c:/one/misc/todo.md"))
+     ((eq choice ?g)
+      (find-file "c:/x/job/2021_goals.Rmd"))
+     (t (message "Quit"))))
+
+;; ---------------------------------------------------------------------------
+
 ;; Add 'fixme' and 'todo' to the watchwords we want highlighted in files.
 ;; https://github.com/areina/emacs.d/blob/master/custom/01lookandfeel.el
 (defun kw-add-watchwords ()
@@ -13,6 +32,8 @@
   (font-lock-add-keywords
    nil '(("\\<\\(fixme\\|FIXME\\|todo\\|TODO\\)\\>"
           1 '((:foreground "#000000" :background "yellow") (:weight bold)) t))))
+;; another version here
+;; https://github.com/tarsius/hl-todo
 
 ;; ---------------------------------------------------------------------------
 
@@ -35,11 +56,11 @@
 ;; ---------------------------------------------------------------------------
 
 (defun kw-line-of-dash()
-  "Insert a comment-line of dashes, condtional on the major mode."
+  "Insert a comment-line of dashes, conditional on the major mode."
   (interactive)
   (beginning-of-line)
   (let ((left
-         (cond ((member mode-name '("Emacs-Lisp" "Lisp Interaction")) ";; ")
+         (cond ((member mode-name '("ELisp" "ELisp/d" "Emacs-Lisp" "Lisp Interaction")) ";; ")
                ((member mode-name '("ESS[R]" "Python")) "# ")
                ((member mode-name '("Text" "Markdown")) "")
                (t "") )) )
@@ -109,6 +130,8 @@
 
 ;; ---------------------------------------------------------------------------
 
+;; Wanted: Use ivy-completing-read for these
+
 ;; https://sites.google.com/site/steveyegge2/my-dot-emacs-file
 ;; https://emacs.stackexchange.com/questions/36299/move-file-associated-with-open-buffer-to-a-specific-folder
 (defun kw-move-file-and-buffer (new-dir)
@@ -126,20 +149,22 @@
             (set-visited-file-name newname)
             (set-buffer-modified-p nil) 	t))))
 
-;; From Steve Yegge
-(defun kw-rename-file-and-buffer (new-name)
- "Renames both current buffer and file it is visiting."
- (interactive "sNew name: ")
- (let ((name (buffer-name))
-       (filename (buffer-file-name)))
-   (if (not filename)
-       (message "This buffer '%s' is not visiting a file!" name)
-     (if (get-buffer new-name)
-         (message "A buffer named '%s' already exists!" new-name)
-       (progn 	 (rename-file name new-name 1)
-                 (rename-buffer new-name)
-                 (set-visited-file-name new-name)
-                 (set-buffer-modified-p nil))))))
+;; From BBatsov
+;;(defun crux-rename-file-and-buffer ()
+(defun kw-rename-file-and-buffer()
+  "Rename current buffer and if the buffer is visiting a file, rename it too."
+  (interactive)
+  (let ((filename (buffer-file-name)))
+    (if (not (and filename (file-exists-p filename)))
+        (rename-buffer (read-from-minibuffer "New name: " (buffer-name)))
+      (let* ((new-name (read-from-minibuffer "New name: " filename))
+             (containing-dir (file-name-directory new-name)))
+        (make-directory containing-dir t)
+        (cond
+         ((vc-backend filename) (vc-rename-file filename new-name))
+         (t
+          (rename-file filename new-name t)
+          (set-visited-file-name new-name t t)))))))
 
 ;; ---------------------------------------------------------------------------
 

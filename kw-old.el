@@ -343,3 +343,45 @@ within `kw-double-key-timeout' seconds."
 
 ;; ---------------------------------------------------------------------------
 ;; ---------------------------------------------------------------------------
+;; This snippet will show a tip in the modeline, but now I do this
+;; using dashboard
+
+;; key tips.  Inspired by prelude-mode
+(defvar kw-tips
+  '("C-x r l bookmaRks List"
+    "C-x r m bookmaRks Mark"
+    "C-c b bookmark jump"
+    "C-c f ivy find recent file."
+    "C-c s swap buffers."
+    "C-c t TODO file."
+    "C-c ? show the face at point."
+    "C-c ( jump to the matching parenthesis."
+    "C-c ) jump to the matching parenthesis."
+    "C-c C-i i markdown insert image link"
+    "C-h P describe-package"
+    "C-o jump to the Other window."
+    "C-u C-SPC jump to previous mark."
+    "C-u C-x = show text properties at point."
+    "C-y M-y yank previous kills."
+    "M-w copy region"
+    "C-` to insert Rmd chunk"
+    "M-nr to render, then open Rmd file"
+    ;; defaults I need to learn
+    "C-h m describe-mode"
+    "C-x d dired"
+))
+
+(defun kw-tip-of-the-day ()
+  "Display a random entry from `kw-tips'."
+  (interactive)
+  (unless (window-minibuffer-p)
+    (random t) ;; pick a new random seed
+    (message "%s" (propertize
+     (concat "Tip: " (nth (random (length kw-tips)) kw-tips))
+     ;;'face '(:background "yellow" :foreground "black")))))
+     'face '(:inherit warning)))))
+
+;; Put at bottom
+(run-at-time 5 nil 'kw-tip-of-the-day) ; After 5 sec, show tip
+
+;; ----------------------------------------------------------------------------

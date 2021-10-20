@@ -4,6 +4,8 @@
 
 ;; Personal diary mode for Kevin Wright
 
+(require 'calendar)
+
 (defvar kw-diary-font-lock-keywords
   (list
    ;; Date + Day
@@ -41,9 +43,9 @@
   ;; Jump to end of buffer, go back one line at a time
   (goto-char (point-max))
   
-  (defvar loopdone) ; needed to stop compile warnings
-  (setq loopdone nil)
-  (while (and (not (bobp)) (not loopdone))
+  (defvar kw-diary-loopdone) ; needed to stop compile warnings
+  (setq kw-diary-loopdone nil)
+  (while (and (not (bobp)) (not kw-diary-loopdone))
     (cond
 
      ;; If blank line, go back
@@ -55,7 +57,7 @@
         (progn
           (forward-char 16)
           (recenter)
-          (setq loopdone t)))
+          (setq kw-diary-loopdone t)))
 
       ;; If string date < greater than the current line, go backward
       ((string< string (buffer-substring (point) (+ 14 (point))) )
@@ -70,7 +72,7 @@
          (insert string "  \n")
          (backward-char 1)
          (recenter)
-         (setq loopdone t)))
+         (setq kw-diary-loopdone t)))
     )
    )
 )
