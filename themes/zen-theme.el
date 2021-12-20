@@ -197,6 +197,7 @@
    `(grep-error-face ((t (:foreground ,red-2 :weight bold :underline t))))
    `(grep-hit-face ((t (:foreground ,blue-5))))
    `(grep-match-face ((t (:foreground ,orange-3 :weight bold))))
+   
    `(match ((t (:background ,gray-1 :foreground ,orange-3 :weight bold))))
 
    ;; ido
@@ -205,8 +206,9 @@
    `(ido-subdir ((t (:foreground ,yellow-5))))
 
    ;; isearch
-   `(isearch ((t (:foreground ,green-5 :background ,green-1))))
    `(lazy-highlight ((t (:foreground ,blue-5 :background ,blue-0))))
+   `(isearch ((t (:foreground ,green-5 :background ,green-1))))
+   `(isearch-lazy-highlight-face ((t (:inherit lay-highlight))))
    `(isearch-fail ((t (:foreground ,red-5 :background ,red-0))))
 
    ;; ivy

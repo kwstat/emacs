@@ -1,23 +1,15 @@
 ; kw-dotemacs.el
 
 ;; Message: Package cl is deprecated is coming from key-combo, which is not maintained
-
 ;;(eval-after-load "cl" '(debug))
+
 
 ;; David Wilson
 ;; https://github.com/daviwil/emacs-from-scratch
 ;; https://github.com/daviwil/dotfiles/blob/master/Emacs.org
 ;; Emacs from Scratch 1-12. Tips 1-2 6-7.
 
-;; Review
-;; https://github.com/jinnovation/dotemacs
-;; https://stackoverflow.com/questions/88399/how-do-i-duplicate-a-whole-line-in-emacs
-;; https://rejeep.github.io/emacs/elisp/2010/03/11/duplicate-current-line-or-region-in-emacs.html
-
-;; todo: Emacs 28.1 has make-separator-line, M-: (insert (make-separator-line 70))
-
 ;; todo: fix template + counsel
-;; fix line-of-dash
 
 ;; flyspell-default-delayed-commands
 ;; (add-to-list 'flyspell-delayed-commands 'self-insert-command)
@@ -56,16 +48,16 @@
 (setq default-directory "c:/x/"
       onedrive-dir "c:/one/"
       ;; location of auto-saves. Used by rtf.
-      auto-save-list-file-prefix "c:/one/.emacs.d/.saves-"
+      ;;auto-save-list-file-prefix "c:/one/.emacs.d/.saves-"
+      auto-save-list-file-prefix "c:/kw/.emacs.d/.saves-"
       )
+;; For diary-mode, kw-misc, etc
 (add-to-list 'load-path (concat onedrive-dir "emacs/") )
 
-;;(when (version< emacs-version "27.0") (package-initialize))
-
-;; orig ~/.emacs.d/
-(setq user-emacs-directory "c:/one/.emacs.d/") ; recentf, session-saver, etc
-;(setq package-user-dir "~/.emacs.d/elpa") ; packages are inside elpa
-(setq package-user-dir "c:/one/.emacs.d/elpa") ; packages are inside elpa
+;; recentf, session-saver, etc
+(setq user-emacs-directory "c:/kw/.emacs.d/") ; original: ~/.emacs.d/
+;; Keep elpa packages in c:/kw/.emacs.d/elpa to reduce traffic to OneDrive
+(setq package-user-dir "c:/kw/.emacs.d/elpa") ; original: ~/.emacs.d/elpa
 
 ;; Set up package archive (new computer only)
 (package-initialize)
@@ -101,11 +93,12 @@
                                
 
 (use-package emacs
+  :ensure t
   :custom
   (completion-ignored-extensions
       '("~" ".aux" ".bbl" ".blg" ".brf" ".bst" ".log" ".out" ".ps"
-        ".doc" ".docx" ".ppt" ".pptx" ".xls" ".xlsx"))
-  ;;(completion-show-help nil)
+        ;;".doc" ".docx" ".ppt" ".pptx" ".xls" ".xlsx"))
+        ))
   (completions-format 'vertical) ; Use vertical sorting, not horiz
   ;; Stop emacs from modifying my .emacs file with custom variables
   (custom-file  (concat onedrive-dir "emacs/custom.el"))
@@ -126,7 +119,7 @@
   ;; Add R to the path so that "Rcmd build" will work
   ;; Get qpdf from https://sourceforge.net/projects/qpdf/
   (setenv "PATH" (concat "c:/bin/qpdf/bin" ";"
-                         "c:/Progra~1/R/R-4.1.1/bin/x64/" ";"
+                         "c:/Progra~1/R/R-4.1.2/bin/x64/" ";"
                          (getenv "PATH") ";"
                          "c:/rtools40/usr/bin" ;; for unzip
                          ))
@@ -134,7 +127,7 @@
   (setenv "LANG" "en_US.UTF-8") ; To fix pandoc-cite bug in R
   (setq-default buffers-menu-max-size 20)
   (setq-default cursor-type 'box)
-  (setq-default fill-column 78)
+  (setq-default fill-column 100) ; was 78
   (setq-default mouse-drag-copy-region t)
   (setq-default indent-tabs-mode nil) ; use spaces, not tab
   (setq-default tab-stop-list '(2 4 6))
@@ -143,6 +136,7 @@
 
 ;; Appearance
 (use-package emacs
+  :ensure t
   :custom
   (frame-title-format "%b     %f") ; titlebar: buffer name, path
   :config
@@ -181,14 +175,15 @@
 ;; reload files if they change on disk
 
 (use-package autorevert
+  :ensure t
   :mode ("\\.pvs$" . auto-revert-mode) ;; asreml predictions
-  ;;:mode ("c:/kw/.emacs.d/recentf" . auto-revert-mode)
-  :mode ("c:/one/.emacs.d/recentf" . auto-revert-mode)
+  :mode ("c:/kw/.emacs.d/recentf" . auto-revert-mode)
   :commands (auto-revert-mode) )
 
 ;; ---------------------------------------------------------------------------
 
 (use-package bibtex
+  :ensure t
   :mode ("\\.bib$" . bibtex-mode)
   :commands (bibtex-mode)
   :bind
@@ -198,6 +193,7 @@
 ;; ---------------------------------------------------------------------------
 
 (use-package bookmark
+  :ensure t
   :commands (bookmark-jump bookmark-all-names)
   :bind
   ("C-c b" . bookmark-jump) ; default is C-x r b
@@ -207,6 +203,7 @@
 ;; -------------------------------------------------------------------------
 
 (use-package calendar
+  :ensure t
   :custom
   (diary-file (concat onedrive-dir "blog/diary.txt"))
   ;; When we insert a diary entry, have emacs use a date like: 08.07.2002 Thu
@@ -273,6 +270,7 @@ otherwise just move in the buffer."
 ;; ---------------------------------------------------------------------------
 
 (use-package dashboard
+  :ensure t
   :diminish
   :custom
   ;;(dashboard-banner-logo-title "your custom text")
@@ -289,7 +287,6 @@ otherwise just move in the buffer."
      "C-c ) jump to the matching parenthesis."
      "C-c C-i i markdown insert image link"
      "C-h P describe-Package"
-     "C-o jump to the Other window."
      "C-u C-SPC jump to previous mark."
      "C-u C-x = show text properties at point."
      "C-y M-y yank previous kills."
@@ -304,7 +301,6 @@ otherwise just move in the buffer."
      "C-M-d down list"
      "C-M-u up list"
      "C-M-k kill-sexp"
-     "C-` to insert Rmd chunk"
      "M-nr to render, then open Rmd file"
      ;; defaults I need to learn
      "C-h m describe-mode"
@@ -328,6 +324,7 @@ otherwise just move in the buffer."
 ;; Get rg.exe here https://github.com/BurntSushi/ripgrep/releases
 
 (use-package deadgrep
+  :ensure t
   :defer
   :bind
   ("C-c u" . #'deadgrep) ; hUnt for text in current directory
@@ -337,7 +334,9 @@ otherwise just move in the buffer."
 ;; ----------------------------------------------------------------------------
 
 ;; https://github.com/gonewest818/dimmer.el
+
 (use-package dimmer
+  :ensure t
   :custom
   ;; shift inactive buffer background toward text color by .08
   (dimmer-adjustment-mode :background)
@@ -352,7 +351,7 @@ otherwise just move in the buffer."
   (dimmer-mode t))
 
 ;; ----------------------------------------------------------------------------
-;; dired things
+;; dired stuff
 
 ;; recursive listing of directory
 ;; C-u C-x d   -aFR
@@ -378,14 +377,15 @@ otherwise just move in the buffer."
   (add-hook 'dired-mode-hook 'dired-hide-details-mode) ;; toggle with "("
   ;; we cannot set dired-omit-files in :custom
   :config
-    (progn
-      (setq dired-omit-verbose nil)
-      ;; toggle `dired-omit-mode' with C-x M-o
-      (add-hook 'dired-mode-hook #'dired-omit-mode)
-      ))
+  (progn
+    (setq dired-omit-verbose nil)
+    ;; toggle `dired-omit-mode' with C-x M-o
+    (add-hook 'dired-mode-hook #'dired-omit-mode)
+    ))
 
 ;; colorize filenames by type
 (use-package dired-filetype-face
+  :ensure t
   :defer
   )
 ;; this works, but is not widely used
@@ -409,6 +409,7 @@ otherwise just move in the buffer."
 ;; ---------------------------------------------------------------------------
 
 (use-package duplicate-thing
+  :ensure t
   :init
   (defun my-duplicate-thing ()
     "Duplicate thing at point without changing the mark."
@@ -419,7 +420,7 @@ otherwise just move in the buffer."
 
 ;; https://stackoverflow.com/questions/23588549/emacs-copy-region-line-and-comment-at-the-same-time
 (defun duplicate-region-and-comment (beg end &optional arg)
-  "Duplicate the region below and comment-out the original text.
+  "Duplicate the region downward and comment-out the original text.
 See `comment-region' for behavior of a prefix arg."
   (interactive "r\nP")
   (copy-region-as-kill beg end)
@@ -427,8 +428,9 @@ See `comment-region' for behavior of a prefix arg."
   (yank)
   (comment-region beg end arg)
   (forward-line))
-(bind-keys ("C-c <f6>" . duplicate-region-and-comment))
+(bind-keys ("C-c @" . duplicate-region-and-comment))
 
+;; May be nice to check if point is at start of line and insert newline if needed?
 ;; https://emacs.stackexchange.com/questions/47200/copy-paste-text-among-split-window-buffers
 (defun duplicate-region-to-other-window (beg end)
   "Duplicate the region to other window."
@@ -436,14 +438,34 @@ See `comment-region' for behavior of a prefix arg."
   (pcase (window-list)
     (`(,w0 ,w1)
      (with-selected-window w1
-       (insert-buffer-substring (window-buffer w0) beg end)))
-    (t (user-error "Only works with 2 windows"))))
+       (insert-buffer-substring (window-buffer w0) beg end)
+       ;; Guarantee that the inserted text ends with a newline.
+       ;; Better would be to check if last character is newline
+       ;; and insert if needed.
+       (with-current-buffer (window-buffer w1) (insert "\n"))
+       )  )
+    (_ (user-error "Only works with 2 windows")))) ;; _ is really t
 (bind-keys ("C-c 5" . duplicate-region-to-other-window))
 
+
+;; https://emacs.stackexchange.com/questions/69386/how-to-update-beg-end-with-comment-region
+(defun duplicate-region-to-other-window-and-comment (beg end)
+  "Duplicate the region to other window. Comment it."
+  (interactive "r")
+  (let ((text (buffer-substring beg end))) ;; collect text to copy
+    (pcase (window-list)
+      (`(,w0 ,w1)
+       (with-selected-window w1
+     (let ((start (point))) ;; store beginning position of inserted text
+       (insert text)
+       (comment-region start (point))))) ;; comment inserted region
+      (_ (user-error "Only works with 2 windows")))))
+(bind-keys ("C-c %" . duplicate-region-to-other-window-and-comment))
 
 ;; ---------------------------------------------------------------------------
 
 (use-package ediff
+  :ensure t
   :commands (ediff)
   :custom
   (ediff-diff-options "-w") ; ignore whitespace
@@ -452,6 +474,7 @@ See `comment-region' for behavior of a prefix arg."
 ;; ---------------------------------------------------------------------------
 
 (use-package eldoc
+  :ensure t
   ;;:disabled
   ;; used by ess to show func
   :defer
@@ -494,8 +517,8 @@ See `comment-region' for behavior of a prefix arg."
   (ess-style 'RStudio)
   (ess-eval-visibly 'nowait) ;; t seems to make emacs hang
   (ess-history-file nil) ; do not write history
-  ;;(ess-indent-with-fancy-comments nil) ; do not distinguish # ## ###
-  (ess-pdf-viewer-pref "c:/Progra~1/R/R-4.1.1/bin/x64/open.exe")
+  (ess-indent-with-fancy-comments nil) ; do not indent half page for "#" comments
+  (ess-pdf-viewer-pref "c:/Progra~1/R/R-4.1.2/bin/x64/open.exe")
   ;; Simplified pattern, asreml prints WARNING to console
   (ess-R-message-prefixes '("Error" "nfault" "singularities" "Warning" "WARNING"))
   
@@ -515,7 +538,7 @@ See `comment-region' for behavior of a prefix arg."
   (ess-use-eldoc nil) ; no eldoc in ess-mode and inferior-ess-mode
   (ess-use-flymake nil) ; turn it off
   (inferior-ess-r-help-command ".ess.help('%s', help.type='text')\n" )
-  (inferior-ess-r-program "c:/Progra~1/R/R-4.1.1/bin/x64/rterm.exe" )
+  (inferior-ess-r-program "c:/Progra~1/R/R-4.1.2/bin/x64/rterm.exe" )
   (inferior-R-args "--no-restore-history --no-save --quiet")
   :config 
   ;; In R code, add markdown headers.  Note RStudio uses four trailing hyphens.
@@ -523,11 +546,11 @@ See `comment-region' for behavior of a prefix arg."
   (require 'markdown-mode) ; needed for markdown-header-face
   (font-lock-add-keywords
    'ess-r-mode
-   ;; start, space/tab 0 or more times, pound sign; space/tab 1+, alnum at least 1, space/tab 1+, ---
-   '(("^\s*#\s+.+\s+---" 0 'markdown-header-face-1 t)
-     ("^\s*##\s+.+\s+---" 0 'markdown-header-face-2 t)
-     ("^\s*###\s+.+\s+---" 0 'markdown-header-face-3 t)
-     ("^\s*####\s+.+\s+---" 0 'markdown-header-face-4 t)
+   ;; start, space/tab 0 or more times, pound sign; space/tab 1+, alnum at least 1, space/tab, ---
+   '(("^\s*#\s+.+\s---" 0 'markdown-header-face-1 t)
+     ("^\s*##\s+.+\s---" 0 'markdown-header-face-2 t)
+     ("^\s*###\s+.+\s---" 0 'markdown-header-face-3 t)
+     ("^\s*####\s+.+\s---" 0 'markdown-header-face-4 t)
      ))
 
   :bind
@@ -604,18 +627,13 @@ See `comment-region' for behavior of a prefix arg."
         ( "M-r" . ess-eval-region ) )
   :config
   (use-package ess-r-mode)
-  (setq-local comment-start "# ")
+  ;;(setq-local comment-start "# ") ; might not need this??
   )
 
 ;; ---------------------------------------------------------------------------
 
-;(use-package poly-R)
-
-;; polymode weaver: knitr vs knitr-ESS
-;; https://emacs.stackexchange.com/questions/18364/
-;; knitr-ESS weaver will use the CURRENT session--can use and modify objects
-
 (use-package polymode
+  :ensure t
   :mode (;;("\\.Rd" . poly-Rd-mode)
          ;;("\\.Rmd" . poly-markdown+R-mode)
          ("\\.Rmd" . poly-gfm+r-mode)
@@ -720,6 +738,7 @@ See `comment-region' for behavior of a prefix arg."
 ;; ---------------------------------------------------------------------------
 
 (use-package flyspell
+  :ensure t
   ;; :disabled ;; makes scrolling too slow
   ;; use ispell-buffer, NOT flyspell-buffer
   :hook ( (markdown-mode . flyspell-mode)
@@ -729,6 +748,7 @@ See `comment-region' for behavior of a prefix arg."
 ;; make hyperlinks clickable
 
 (use-package goto-addr
+  :ensure t
   :bind
   (:map goto-address-highlight-keymap
         ("C-c C-o" . goto-address-at-point))
@@ -741,6 +761,7 @@ See `comment-region' for behavior of a prefix arg."
 ;; https://github.com/Wilfred/helpful
 
 (use-package helpful
+  :ensure t
   :commands (helpful-callable helpful-command helpful-key helpful-variable)
   ;; :bind
   ;; (("C-h f" . helpful-callable)
@@ -762,6 +783,7 @@ See `comment-region' for behavior of a prefix arg."
 ;; ---------------------------------------------------------------------------
 
 (use-package ibuffer
+  :ensure t
   :commands (ibuffer)
   :custom
   (ibuffer-default-sorting-mode 'recency)
@@ -788,30 +810,26 @@ See `comment-region' for behavior of a prefix arg."
 ;; ---------------------------------------------------------------------------
 ;; used to show images in markdown mode
 
-(use-package iimage 
+(use-package iimage
+  :ensure t
   :commands (iimage-mode turn-on-iimage-mode))
 
 ;; ---------------------------------------------------------------------------
 ;; hunspell uses c:/kw/hunspell_en_US for personal dictionary
 
+;; I wanted to limit the number of ispell choices to 10. Answer here:
+;; https://stackoverflow.com/questions/19186305/how-to-limit-the-number-of-suggestions-that-flyspell-gives
+;; Alternate: Using sug-mode=ultra gives fewer choices than sug-mode=normal
+;; https://emacs.stackexchange.com/questions/60679/flyspell-and-ispell-give-too-many-spelling-suggestions
+
 (use-package ispell
+  :ensure t
   :commands (ispell-buffer)
   :custom
   (ispell-program-name "c:/bin/hunspell/bin/hunspell.exe")
   (ispell-silently-savep t) ; dont prompt to save dictionary
-  :config
-  (defvar limit-ispell-choices-to 10
-    "Number indicating the maximum number of choices to present")
-  
-  (defadvice ispell-parse-output (after limit-ispell-choices activate)
-    (when (and (listp ad-return-value)
-               ad-return-value)
-      (let* ((miss-list-end (nthcdr (- limit-ispell-choices-to 1)
-                                    (nth 2 ad-return-value)))
-             (guess-list-end (nthcdr (- limit-ispell-choices-to 1)
-                                     (nth 3 ad-return-value))))
-        (when miss-list-end (setcdr miss-list-end nil))
-        (when guess-list-end (setcdr guess-list-end nil))))))
+  (ispell-extra-args '("--sug-mode=ultra")) ;; give fewer suggestions
+  )
 
 ;; ----------------------------------------------------------------------------
 ;; image
@@ -832,7 +850,9 @@ See `comment-region' for behavior of a prefix arg."
 
 ;; C-M-j ivy-immediate-done  create file???
 ;; C-j or TAB TAB - descend into directory
+
 (use-package ivy
+  :ensure t
   ;;:demand
   :defer 0.5
   :diminish
@@ -869,6 +889,7 @@ See `comment-region' for behavior of a prefix arg."
   (ivy-mode 1)  )
 
 (use-package counsel
+  :ensure t
   :bind
   ("C-h f" . counsel-describe-function)
   ("C-h v" . counsel-describe-variable)
@@ -886,6 +907,7 @@ See `comment-region' for behavior of a prefix arg."
 
 ;; show the key binding and primary doc string with counsel-M-x
 (use-package ivy-rich
+  :ensure t
   :after counsel
   :config
   (ivy-rich-mode 1))
@@ -950,7 +972,8 @@ See `comment-region' for behavior of a prefix arg."
 (unbind-key "C-t")
 
 ;; functions in kw-misc
-(bind-keys ("C-c m" . kw-move-file-and-buffer)
+(bind-keys ("C-c I" . kw-insert-iso-date)
+           ("C-c m" . kw-move-file-and-buffer)
            ("C-c n b" . kw-new-buffer)
            ("C-c r" . kw-rename-file-and-buffer)
            ("C-c s" . kw-swap-windows)
@@ -963,7 +986,9 @@ See `comment-region' for behavior of a prefix arg."
 ;; Note: We use key-combo because key-chord does not support using <home>
 ;; https://stackoverflow.com/questions/25572489/how-to-create-an-emacs-key-chord-with-home-key
 :; use-package-chords is another alternative
+
 (use-package key-combo
+  :ensure t
   :hook ((ess-mode inferior-ess) . key-combo-mode)
   :demand ;; no delay
   :diminish
@@ -998,6 +1023,7 @@ See `comment-region' for behavior of a prefix arg."
 ;; occur uses a new buffer, loccur uses the same buffer
 
 (use-package loccur
+  :ensure t
   :commands (loccur)
   :bind ("M-o" . loccur-no-selection)
   :config
@@ -1011,6 +1037,7 @@ See `comment-region' for behavior of a prefix arg."
 ;; ---------------------------------------------------------------------------
 
 (use-package magit
+  :ensure t
   :bind
   ("C-c g" . magit-status) )
 
@@ -1036,19 +1063,25 @@ See `comment-region' for behavior of a prefix arg."
 ;; ---------------------------------------------------------------------------
 
 (use-package markdown-mode
+  :ensure t
   :commands (markdown-mode)
-  ;; gfm-mode allows underscores
+  ;; gfm-mode allows underscores inside words
   :mode (("README\\.md" . gfm-mode)
          ("\\.md" . gfm-mode)) ; was markdown-mode
+  :init
+  (add-hook 'markdown-mode-hook
+            (lambda()
+              (setq-local comment-start "# ") ; default is <!--
+              (setq-local comment-end "") ; default is --!>
+              ))
   :bind
   (:map markdown-mode-map
         ("C-S-b" . recompile) ; run makefile like RStudio 
         ("C-c i c" . kw-markdown-screenshot-capture-and-paste)
         ("C-c i v" . kw-markdown-screenshot-paste)
         ("C-c i l" . kw-markdown-insert-image-link)
-        ("C-c i t" . markdown-toggle-inline-images)
-        ("C-c i h" . markdown-toggle-markup-hiding)
-        ;;("C-c C-w" . kw-md-to-docx-and-open)
+        ;("C-c i t" . markdown-toggle-inline-images) ; C-c C-x C-i
+        ;("C-c i h" . markdown-toggle-markup-hiding) ; C-c C-x C-m
         ;; ("C-S-k" . kw-md-to-docx-and-open)
         ;; use other window if one is open
         ("C-c C-o" . (lambda () (interactive) (markdown-follow-thing-at-point t)))
@@ -1086,10 +1119,11 @@ See `comment-region' for behavior of a prefix arg."
 ;; save a list of currently-visited files
 
 (use-package minimal-session-saver
+  :ensure t
   :commands (minimal-session-saver-store minimal-session-saver-load
              session-save session-restore)
   :custom
-  (minimal-session-saver-data-file "c:/one/.emacs.d/minimal-session-saver-data.el")
+  (minimal-session-saver-data-file "c:/kw/.emacs.d/minimal-session-saver-data.el")
   :config
   (defalias 'session-save 'minimal-session-saver-store)
   (defalias 'session-restore 'minimal-session-saver-load)
@@ -1117,7 +1151,9 @@ See `comment-region' for behavior of a prefix arg."
 ;; ---------------------------------------------------------------------------
 
 ;; https://github.com/jaypei/emacs-neotree
+
 (use-package neotree
+  :ensure t
   :commands neotree
   :config
   ;;(setq neo-theme (if (display-graphic-p) 'icons 'arrow))
@@ -1130,6 +1166,7 @@ See `comment-region' for behavior of a prefix arg."
 ;; t=toc, p=prev, n=next, l=hist back, r=hist forward
 
 (use-package nov
+  :ensure t
   :custom
   (nov-unzip-program "c:/rtools40/usr/bin/unzip.exe")
   :mode ("\\.epub\\'" . nov-mode) )
@@ -1138,6 +1175,7 @@ See `comment-region' for behavior of a prefix arg."
 ;; use non-emacs programs to open files
 
 (use-package openwith
+  :ensure t
   :custom
   (openwith-associations
    '(("\\.pdf$" "pdfxcview.exe" (file))
@@ -1152,28 +1190,17 @@ See `comment-region' for behavior of a prefix arg."
 ;; ---------------------------------------------------------------------------
 
 (use-package paren
+  :ensure t
   :hook
   (prog-mode . show-paren-mode)
   ;; :config
   ;; (show-paren-mode t)
   )
 
-(defadvice show-paren-function
-    (after show-matching-paren-offscreen activate)
-  "If the matching paren is offscreen, show the matching line in the
-    echo area. Has no effect if the character before point is not of
-    the syntax class ')'."
-  (interactive)
-  (let* (
-         (cb (char-before (point)))
-         (matching-text (and cb
-                             (char-equal (char-syntax cb) ?\) )
-                             (blink-matching-open)
-                             ) ))))
-
 ;; ---------------------------------------------------------------------------
 
 (use-package python
+  :ensure t
   :mode ("\\.py$" . python-mode)
   :commands (run-python)
   :custom
@@ -1183,12 +1210,14 @@ See `comment-region' for behavior of a prefix arg."
 ;; colorize color names
 
 (use-package rainbow-mode
+  :ensure t
   :diminish
   :hook (emacs-lisp-mode . rainbow-mode) )
 
 ;; ---------------------------------------------------------------------------
 
 (use-package rainbow-delimiters
+  :ensure t
   ;; inferior-ess-mode is not a prog-mode, so include it here
   :hook ((prog-mode inferior-ess-mode)
          . rainbow-delimiters-mode)
@@ -1197,6 +1226,7 @@ See `comment-region' for behavior of a prefix arg."
 ;; ---------------------------------------------------------------------------
 
 (use-package recentf
+  :ensure t
   :custom
   (recentf-max-saved-items 1000)
   (recentf-max-menu-items 15)
@@ -1215,6 +1245,7 @@ See `comment-region' for behavior of a prefix arg."
 
 ;; allow multiple emacs sessions to use recentf
 (use-package sync-recentf
+  :ensure t
   ;; :defer Maybe I should NOT defer?
   :custom
   (recentf-auto-cleanup 60))
@@ -1258,10 +1289,12 @@ See `comment-region' for behavior of a prefix arg."
 ;; I don't use these anymore???
 
 (use-package reftex
+  :ensure t
   :hook ((latex-mode . turn-on-reftex)) ; with Emacs latex mode
   )
 
 (use-package reftex-vars
+  :ensure t
   :commands (turn-on-reftex)
   :custom
   (reftex-bibpath-environment-variables '("c:/x/notes/") )
@@ -1277,6 +1310,7 @@ See `comment-region' for behavior of a prefix arg."
 ;; save-place-local-mode to remember cursor position in only 1 file
 
 (use-package saveplace
+  :ensure t
   :init
   (save-place-mode t)
   )
@@ -1298,6 +1332,7 @@ See `comment-region' for behavior of a prefix arg."
               ("<C-left>" . eshell-bol)))
   
 (use-package eshell
+  :ensure t
   :commands (eshell eshell-command)
   :config
   ;;(defalias 'btsat '"C:/Temp/BT-SAT/BetaVersion/btsat.exe $1")
@@ -1316,6 +1351,7 @@ See `comment-region' for behavior of a prefix arg."
 
 ;; shell loses track of directory when using 'cd'
 (use-package shell
+  :ensure t
   :commands (shell)
   )
 
@@ -1331,6 +1367,7 @@ See `comment-region' for behavior of a prefix arg."
 ;; save files upon focus-out-hook and switch-to-buffer
 
 (use-package super-save
+  :ensure t
   :diminish
   :config
   (super-save-mode +1))
@@ -1380,6 +1417,7 @@ See `comment-region' for behavior of a prefix arg."
 ;; ----------------------------------------------------------------------------
 
 (use-package theme-looper
+  :ensure t
   ;;:demand ; override delayed loading caused by :bind
   :custom
   (custom-theme-directory (concat onedrive-dir "emacs/themes/"))  
@@ -1398,6 +1436,7 @@ See `comment-region' for behavior of a prefix arg."
   :commands load-theme)
 
 (use-package modus-themes
+  :ensure t
   :defer
   :custom
   (modus-themes-diffs 'deuteranopia)
@@ -1423,6 +1462,7 @@ See `comment-region' for behavior of a prefix arg."
 ;; ---------------------------------------------------------------------------
 
 (use-package time-stamp
+  :ensure t
   :commands (time-stamp)
   :custom
   (time-stamp-format "%02d %3b %:y %02H:%02M:%02S %F")
@@ -1432,6 +1472,7 @@ See `comment-region' for behavior of a prefix arg."
 ;; ---------------------------------------------------------------------------
 
 (use-package transpose-frame
+  :ensure t
   :bind ("C-c C-T" . transpose-frame)
   :commands (transpose-frame))
 
@@ -1439,6 +1480,7 @@ See `comment-region' for behavior of a prefix arg."
 ;; unfill unwraps
 
 (use-package unfill
+  :ensure t
   :defer
   :bind
   ;;  ("<C-?>" . fill-paragraph) ; C-S-/ in rstudio
@@ -1451,12 +1493,14 @@ See `comment-region' for behavior of a prefix arg."
 
 ;; https://github.com/benma/visual-regexp.el
 (use-package visual-regexp
+  :ensure t
   :disabled
   :bind ("C-c 5" . #'vr/replace))
 
 ;; Use modern regexp without extra parens
 ;; https://github.com/benma/visual-regexp-steroids.el/
 (use-package visual-regexp-steroids
+  :ensure t
   :defer
   :disabled
   :bind (("C-S-r" . vr/isearch-backward) ;; C-M-r
@@ -1473,6 +1517,7 @@ See `comment-region' for behavior of a prefix arg."
 ;; https://emacsredux.com/blog/2014/04/05/which-function-mode/
 
 (use-package which-function-mode
+  :ensure t
   :disabled
   :defer t
   :hook ((prog-mode . which-function-mode)) )
@@ -1481,6 +1526,7 @@ See `comment-region' for behavior of a prefix arg."
 ;; https://github.com/justbur/emacs-which-key
 
 (use-package which-key
+  :ensure t
   :diminish
   :defer 1
   :config
@@ -1674,4 +1720,21 @@ to choose a directory starting with `directory-to-start-in'"
      (kill-buffer (current-buffer))))
  (insert (decode-coding-string bibtex-entry 'utf-8))
  (bibtex-fill-entry))
+
+;; ------------------------------------------------------------------------------
+
+;; visual-markdown-mode : shows images, omits markup
+;; https://blog.rstudio.com/2020/09/30/rstudio-v1-4-preview-visual-markdown-editing/
+
+;; This does toggle "on" (show images, hide markup)
+;; but toggle "off" only hides images, does not show markup
+(defun visual-markdown-mode()
+  "Toggle both images and markup"
+  (interactive)
+  (progn
+    (markdown-toggle-markup-hiding)
+    (markdown-toggle-inline-images)
+    ) )
+
+
 

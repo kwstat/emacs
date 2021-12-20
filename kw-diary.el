@@ -18,7 +18,7 @@
    `(,(regexp-opt '("Book:" "Audiobook:" "Ebook:" "Concert:" "Play:"
                     "Sport:" "Movie:" "TV:" "Video:") ) . font-lock-keyword-face)
    ;; Activity
-   `(,(regexp-opt '("Cook:" "Conf:" "Game night:")) . font-lock-variable-name-face)
+   `(,(regexp-opt '("Bike:" "Cook:" "Conf:" "Game night:")) . font-lock-variable-name-face)
    )
   "Syntax highlighting for kw-diary" )
 

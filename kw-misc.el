@@ -55,31 +55,51 @@
 
 ;; ---------------------------------------------------------------------------
 
-(defun kw-line-of-dash()
-  "Insert a comment-line of dashes, conditional on the major mode."
-  (interactive)
-  (beginning-of-line)
-  (let ((left
-         (cond ((member mode-name '("ELisp" "ELisp/d" "Emacs-Lisp" "Lisp Interaction")) ";; ")
-               ((member mode-name '("ESS[R]" "Python")) "# ")
-               ((member mode-name '("Text" "Markdown")) "")
-               (t "") )) )
-    (insert (concat left
-                    (make-string (- 78 (length left)) ?-)
-                    "\n"))))
+;; Note: Emacs 28.1 has make-separator-line, M-: (insert (make-separator-line 70))
+;; It is only a line of dash, without leading comment character
 
-(defun kw-line-of-underscore()
-  "Insert a comment-line of underscores, condtional on the major mode."
-  (interactive)
-  (beginning-of-line)
-  (let ((left
-         (cond ((member mode-name '("Emacs-Lisp" "Lisp Interaction")) ";; ")
-               ((member mode-name '("ESS[R]")) "# ")
-               ((member mode-name '("Text")) "")
-               (t "") )) )
-    (insert (concat left
-                    (make-string (- 78 (length left)) ?_)
-                    "\n"))))
+;; comment-char is only ";" in elisp
+;; comment-add is 1, which means add an extra comment character at start
+
+(defun kw-line-of-dash()
+ (interactive)
+ (beginning-of-line)
+ (insert (make-string 75 ?-) )
+ (comment-or-uncomment-region (line-beginning-position) (line-end-position))
+ (insert "\n")  )
+
+(defun kw-line-of-doubledash()
+ (interactive)
+ (beginning-of-line)
+ (insert (make-string 75 ?=) )
+ (comment-or-uncomment-region (line-beginning-position) (line-end-position))
+ (insert "\n")  )
+
+;; (defun kw-line-of-dash()
+;;   "Insert a comment-line of dashes, conditional on the major mode."
+;;   (interactive)
+;;   (beginning-of-line)
+;;   (let ((left
+;;          (cond ((member mode-name '("ELisp")) ";; ")
+;;                ((member mode-name '("ESS[R]" "Python")) "# ")
+;;                ((member mode-name '("Text" "Markdown")) "")
+;;                (t "") )) )
+;;     (insert (concat left
+;;                     (make-string (- 78 (length left)) ?-)
+;;                     "\n"))))
+
+;; (defun kw-line-of-underscore()
+;;   "Insert a comment-line of underscores, condtional on the major mode."
+;;   (interactive)
+;;   (beginning-of-line)
+;;   (let ((left
+;;          (cond ((member mode-name '("Emacs-Lisp" "Lisp Interaction")) ";; ")
+;;                ((member mode-name '("ESS[R]")) "# ")
+;;                ((member mode-name '("Text")) "")
+;;                (t "") )) )
+;;     (insert (concat left
+;;                     (make-string (- 78 (length left)) ?_)
+;;                     "\n"))))
 
 ;; ---------------------------------------------------------------------------
 
@@ -198,12 +218,11 @@
 
 ;; ---------------------------------------------------------------------------
 
-(defun kw-untabify-buffer ()
-  "Convert tabs to spaces in the current buffer."
+;; https://www.emacswiki.org/emacs/InsertingTodaysDate
+(defun kw-insert-iso-date ()
   (interactive)
-  (save-excursion (untabify (point-min) (point-max))))
-
-
+  ;;(insert (format-time-string "%Y-%m-%dT%H:%M:%S")))
+  (insert (format-time-string "%Y-%m-%d")))
 
 (provide 'kw-misc)
 

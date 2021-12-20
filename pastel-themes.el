@@ -359,8 +359,6 @@ return the actual color value.  Otherwise return the value unchanged."
    theme-colors
 
    '(
-     ;; Built-in
-     
      ;; basic colors
      (border                                       :background base03)
      (cursor                                       :background base08)
@@ -415,14 +413,42 @@ return the actual color value.  Otherwise return the value unchanged."
      (font-lock-variable-name-face                 :foreground base08 :weight bold)
      (font-lock-warning-face                       :foreground base08)
 
-     ;; isearch
+     ;; match is NOT used by isearch
      (match                                        :foreground base0D :background base01)
-     ;;(isearch                                      :foreground base0A :background base01)
-     (isearch                                      :foreground base00 :background base04)
+     
+     (isearch                                      :foreground base00 :background base07)
      (lazy-highlight                               :foreground base0C :background base02)
      (isearch-lazy-highlight-face                  :inherit lazy-highlight)
      (isearch-fail                                 :background base01 :inherit font-lock-warning-face)
 
+
+   ;; ;;;; swiper
+   ;; (swiper-background-match-face-1               :inherit 'match :weight 'bold)
+   ;; (swiper-background-match-face-2               :inherit 'match)
+   ;; (swiper-background-match-face-3               :inherit 'match :foreground green)
+   ;; (swiper-background-match-face-4               :inherit 'match :weight 'bold :foreground green)
+   ;; (swiper-match-face-1                          :inherit 'isearch :weight 'bold)
+   ;; (swiper-match-face-2                          :inherit 'isearch)
+   ;; (swiper-match-face-3                          :inherit 'isearch :foreground green)
+   ;; (swiper-match-face-4                          :inherit 'isearch :weight 'bold :foreground green)
+   ;; (swiper-line-face                             :inherit 'hl-line)
+   
+     ;; swiper
+     ;; line-face highlights the whole line containing the current match
+     ;; match-face-2 highlights the current match
+     ;; background-match-face
+     ;; face-1 is used BETWEEN the sub matches.
+     ;; "this is the day", C-s this day , then 'this' face-2; 'day' gets face-3, and "is the" gets face-1
+     (swiper-line-face                 :foreground base07 :background base02)
+;;     (swiper-match-face-1 :foreground base00 :background base0A)
+     (swiper-match-face-2 :foreground base00 :background base0B)
+     (swiper-match-face-3 :foreground base00 :background base0D)
+     (swiper-match-face-4 :foreground base00 :background base0F)
+;;     (swiper-packground-match-face-1 :weight bold :foreground base0A :background base02)
+     (swiper-background-match-face-2 :weight bold :foreground base0B :background base02)
+     (swiper-packground-match-face-3 :weight bold :foreground base0D :background base02)
+     (swiper-packground-match-face-4 :weight bold :foreground base0F :background base02)
+     
      ;; line-numbers
      (line-number                                  :foreground base03 :background base01)
      (line-number-current-line                     :inverse-video t)
